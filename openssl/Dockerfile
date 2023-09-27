@@ -5,6 +5,6 @@ RUN apk update && apk add --no-cache --upgrade bash && apk add nano
 
 WORKDIR /home
 
-COPY ./openssl .
+COPY ./scripts .
 
 ENTRYPOINT [ "tail", "-f", "/dev/null" ]

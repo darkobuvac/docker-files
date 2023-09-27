@@ -13,3 +13,4 @@ services:
       - ./openssl/intermediate:/home/intermediate
       - ./openssl/newcerts:/home/newcerts
       - ./openssl/private:/home/private
+      - ./openssl/self-signed-cert:/home/self-signed-cert

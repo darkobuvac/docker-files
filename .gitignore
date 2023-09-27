@@ -2,3 +2,4 @@
 /openssl/intermediate
 /openssl/newcerts
 /openssl/private
+/openssl/self-signed-cert
