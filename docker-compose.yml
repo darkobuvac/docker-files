@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  
+  openssl:
+    container_name: openssl
+    build:
+      context: ./openssl
+      dockerfile: Dockerfile
+    volumes:
+      - ./openssl/certs:/home/certs
+      - ./openssl/crl:/home/crl
+      - ./openssl/intermediate:/home/intermediate
+      - ./openssl/newcerts:/home/newcerts
+      - ./openssl/private:/home/private
