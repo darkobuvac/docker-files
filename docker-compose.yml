@@ -14,3 +14,12 @@ services:
       - ./openssl/newcerts:/home/newcerts
       - ./openssl/private:/home/private
       - ./openssl/self-signed-cert:/home/self-signed-cert
+
+
+  postman:
+    container_name: postman-newman
+    build:
+      context: ./postman
+      dockerfile: Dockerfile
+    volumes:
+      - ./postman/src:/etc/newman
