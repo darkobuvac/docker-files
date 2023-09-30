@@ -16,6 +16,8 @@ USER root
 RUN apt-get update
 RUN apt-get -y install sudo
 
+RUN apt-get -y install iputils-ping
+
 RUN apt-get update && apt-get install -y --no-install-recommends cron && rm -r /var/lib/apt/lists/*
 
 RUN echo "jenkins:jenkins" | chpasswd

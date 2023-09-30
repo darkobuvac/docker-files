@@ -5,3 +5,4 @@
 /openssl/self-signed-cert
 /postman/src
 /jenkins/.env
+/jenkins/agents/postman/src

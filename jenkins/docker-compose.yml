@@ -40,11 +40,29 @@ services:
       - docker_slave:/home/jenkins
     networks:
       - jenkins
-    command: "chmod -R 777 /var/run/docker.sock"
+
+  postman-slave:
+    container_name: jenkins-postman-slave
+    build:
+      context: ./agents/postman
+      dockerfile: Dockerfile
+    volumes:
+      - postman_newman:/etc/newman
+      - postman_slave:/home/jenkins
+    privileged: true
+    restart: unless-stopped
+    expose:
+      - 22
+    environment:
+      - JENKINS_AGENT_SSH_PUBKEY=${JENKINS_AGENT_SSH_PUBKEY}
+    networks:
+      - jenkins
 
 volumes:
    jenkins_data:
    docker_slave:
+   postman_slave:
+   postman_newman:
 
 networks:
    jenkins:
