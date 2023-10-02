@@ -6,3 +6,6 @@
 /postman/src
 /jenkins/.env
 /jenkins/agents/postman/src
+/jenkins/agents/postman/ssh
+/jenkins/agents/postman/service-order-management
+/jenkins/agents/postman/Jenkinsfile-2

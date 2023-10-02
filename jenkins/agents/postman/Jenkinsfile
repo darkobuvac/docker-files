@@ -1,0 +1,63 @@
+@Library("slack-library") _
+
+pipeline {
+    environment {
+        NAME = 'CxO Service Order Management'
+        REPO = 'https://github.com/codaxy/cxo-service-order-management'
+        BRANCH = 'main'
+        IMAGE = 'ghcr.io/codaxy/cxo-service-order-management:latest' 
+        DOCKERFILE = './src/ServiceOrderManagement.Api/Dockerfile'
+        SERVICE = 'serviceordermanagement'
+    }
+
+    parameters {
+      string(name: 'REPO', defaultValue: '', description: 'Url of github repository')
+      string(name: 'DOCKER_IMAGE', defaultValue: '', description: 'CxO service docker image')
+      string(name: 'SERVICE_NAME', defaultValue: '', description: 'CxO service name')
+    }
+
+    agent none
+
+    stages {
+
+        // stage('Cloning git') {
+
+        //     agent {
+        //       label 'postman-agent'
+        //     }
+
+        //     steps {
+        //       git branch: "main", credentialsId: 'github-token', url: "${REPO}"
+        //     }
+        // }
+
+        stage('Bring testing containers'){
+          agent {
+            label 'jenkins-docker-slave'
+          }
+
+          steps{
+            sh 'docker run -d --name cxo_testing_db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres --network jenkins_jenkins --rm postgres:latest'
+            sh """docker run -d --name ${params.SERVICE_NAME}-api-test -e ConnectionStrings__Database="Host=cxo_testing_db;Port=5432;Database=${params.SERVICE_NAME};Username=postgres;Password=postgres; --network jenkins_jenkins --rm ${params.DOCKER_IMAGE}"""   
+          }
+        }
+        
+        stage('Build docker image') {
+
+            agent {
+              label 'jenkins-postman-slave'
+            }
+
+            steps{
+              sh 'newman run /etc/newman/Restful_Booker_Collection.json --environment /etc/newman/environments/Restful_Booker_Environment.json'
+            }
+        }
+    }
+    
+    post {
+        success {
+            sh 'docker stop ${params.SERVICE_NAME}-api-test cxo_testing_db'
+        }
+    }
+}
+

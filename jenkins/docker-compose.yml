@@ -38,6 +38,7 @@ services:
     volumes:
       - ${HOST_DOCKER}:/var/run/docker.sock
       - docker_slave:/home/jenkins
+    # command: chmod -R 777 /var/run/docker.sock
     networks:
       - jenkins
 
@@ -49,8 +50,10 @@ services:
     volumes:
       - postman_newman:/etc/newman
       - postman_slave:/home/jenkins
+      # - ./agents/postman/ssh/sshd_config:/etc/ssh/sshd_config
     privileged: true
     restart: unless-stopped
+    user: jenkins
     expose:
       - 22
     environment:

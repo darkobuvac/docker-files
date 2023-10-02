@@ -3,7 +3,6 @@ FROM jenkins/ssh-agent:latest-jdk11 AS base
 ARG HOST_GID
 ARG HOST_UID
 
-#Install Docker CLI
 RUN apt-get update && apt-get install -y curl wget gpg apt-transport-https ca-certificates gnupg-agent software-properties-common
 RUN install -m 0755 -d /etc/apt/keyrings
 
@@ -21,9 +20,7 @@ ENV NODE_MAJOR=20
 
 RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
 
-RUN apt-get update && sudo apt-get install nodejs -y
-
-RUN chown -R jenkins:jenkins /home/jenkins &&  chmod -R 777 /home/jenkins
+RUN apt-get update && sudo apt-get install nodejs -y && sudo apt-get install nano
 
 WORKDIR /etc/newman
 
@@ -33,4 +30,16 @@ RUN curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
 
 RUN npm install -g newman newman-reporter-html
 
+WORKDIR /
+
+RUN touch /home/jenkins/.ssh/authorized_keys
+
+RUN chown -R jenkins:jenkins /home/jenkins && chmod 750 /home/jenkins && chmod 700 /home/jenkins/.ssh && chmod 600 /home/jenkins/.ssh/authorized_keys
+
+RUN chmod -R 777 /etc/environment && chmod -R 777 /etc/ssh
+
 RUN npm -v
+
+USER jenkins
+
+WORKDIR /home/jenkins

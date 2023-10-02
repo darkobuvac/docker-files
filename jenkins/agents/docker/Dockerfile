@@ -31,4 +31,4 @@ RUN usermod -aG docker jenkins
 
 RUN chmod -R 777 /etc/environment && chmod -R 777 /etc/ssh
 
-USER root
+USER jenkins
