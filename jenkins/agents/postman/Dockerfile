@@ -28,7 +28,9 @@ COPY ./src .
 
 RUN curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
 
-RUN npm install -g newman newman-reporter-html
+RUN npm install -g newman newman-reporter-html newman-reporter-junitfull
+
+RUN npm install ajv
 
 WORKDIR /
 

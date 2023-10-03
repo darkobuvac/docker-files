@@ -1,15 +1,7 @@
 @Library("slack-library") _
 
 pipeline {
-    environment {
-        NAME = 'CxO Service Order Management'
-        REPO = 'https://github.com/codaxy/cxo-service-order-management'
-        BRANCH = 'main'
-        IMAGE = 'ghcr.io/codaxy/cxo-service-order-management:latest' 
-        DOCKERFILE = './src/ServiceOrderManagement.Api/Dockerfile'
-        SERVICE = 'serviceordermanagement'
-    }
-
+    
     parameters {
       string(name: 'REPO', defaultValue: '', description: 'Url of github repository')
       string(name: 'DOCKER_IMAGE', defaultValue: '', description: 'CxO service docker image')
@@ -55,8 +47,12 @@ pipeline {
     }
     
     post {
-        success {
-            sh 'docker stop ${params.SERVICE_NAME}-api-test cxo_testing_db'
+        always {
+          node('jenkins-docker-slave'){
+            script{
+              sh """docker stop "${params.SERVICE_NAME}"-api-test && docker stop cxo_testing_db"""
+            }
+          }
         }
     }
 }
