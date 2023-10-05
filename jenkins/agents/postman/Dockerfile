@@ -6,9 +6,6 @@ ARG HOST_UID
 RUN apt-get update && apt-get install -y curl wget gpg apt-transport-https ca-certificates gnupg-agent software-properties-common
 RUN install -m 0755 -d /etc/apt/keyrings
 
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-RUN chmod a+r /etc/apt/keyrings/docker.gpg
-
 RUN apt-get update
 RUN apt-get -y install sudo
 
@@ -28,9 +25,7 @@ COPY ./src .
 
 RUN curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
 
-RUN npm install -g newman newman-reporter-html newman-reporter-junitfull
-
-RUN npm install ajv
+RUN npm install -g newman newman-reporter-html newman-reporter-junitfull newman-reporter-htmlextra newman-reporter-slackmsg ajv
 
 WORKDIR /
 
